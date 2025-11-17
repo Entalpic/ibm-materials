@@ -23,21 +23,21 @@ from torch.nn.init import constant_, xavier_uniform_
 from torch_geometric.nn import MessagePassing
 from torch_geometric.nn.inits import glorot_orthogonal
 from torch_geometric.nn.models.schnet import ShiftedSoftplus
-from torch_scatter import scatter
+# from torch_scatter import scatter
 
 zeros_initializer = partial(constant_, val=0.0)
 
 
-def centralize(
-    batch,
-    key: str,
-    batch_index: torch.Tensor,
-):  # note: cannot make assumptions on output shape
-    # derive centroid of each batch element, and center entities using corresponding centroids
-    entities_centroid = scatter(batch[key], batch_index, dim=0, reduce="mean")  # e.g., [batch_size, 3]
-    entities_centered = batch[key] - entities_centroid[batch_index]
+# def centralize(
+#     batch,
+#     key: str,
+#     batch_index: torch.Tensor,
+# ):  # note: cannot make assumptions on output shape
+#     # derive centroid of each batch element, and center entities using corresponding centroids
+#     entities_centroid = scatter(batch[key], batch_index, dim=0, reduce="mean")  # e.g., [batch_size, 3]
+#     entities_centered = batch[key] - entities_centroid[batch_index]
 
-    return entities_centroid, entities_centered
+#     return entities_centroid, entities_centered
 
 
 def decentralize(
