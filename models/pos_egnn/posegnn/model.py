@@ -2,7 +2,7 @@ from torch import nn
 import torch
 from .encoder import GotenNet
 from .utils import get_symmetric_displacement, BatchedPeriodicDistance, ACT_CLASS_MAPPING
-from torch_scatter import scatter
+# from torch_scatter import scatter
 
 class NodeInvariantReadout(nn.Module):
     def __init__(self, in_channels, num_residues, hidden_channels, out_channels, activation):
@@ -40,7 +40,7 @@ class PosEGNN(nn.Module):
         self.register_buffer("atomic_res_total_std", torch.tensor(config["atomic_res_total_std"]))
 
     def forward(self, data):
-        data.pos.requires_grad_(True)
+        # data.pos.requires_grad_(True)
 
         data.pos, data.box, data.displacements = get_symmetric_displacement(data.pos, data.box, data.num_graphs, data.batch)
 
@@ -52,48 +52,48 @@ class PosEGNN(nn.Module):
 
         return embedding_dict
 
-    def compute_properties(self, data, compute_stress = True):
-        output = {}
+    # def compute_properties(self, data, compute_stress = True):
+    #     output = {}
         
-        embedding_dict = self.forward(data)
-        embedding_0 = embedding_dict["embedding_0"]
+    #     embedding_dict = self.forward(data)
+    #     embedding_0 = embedding_dict["embedding_0"]
 
-        # Compute energy
-        node_e_res = self.readout(embedding_0)
+    #     # Compute energy
+    #     node_e_res = self.readout(embedding_0)
 
-        node_e_res = node_e_res * self.atomic_res_total_std + self.atomic_res_total_mean
-        total_e_res = scatter(src=node_e_res, index=data["batch"], dim=0, reduce="sum")
+    #     node_e_res = node_e_res * self.atomic_res_total_std + self.atomic_res_total_mean
+    #     total_e_res = scatter(src=node_e_res, index=data["batch"], dim=0, reduce="sum")
 
-        node_e0 = self.e0_mean[data.z]
-        total_e0 = scatter(src=node_e0, index=data["batch"], dim=0, reduce="sum")
+    #     node_e0 = self.e0_mean[data.z]
+    #     total_e0 = scatter(src=node_e0, index=data["batch"], dim=0, reduce="sum")
 
-        total_energy = total_e0 + total_e_res
-        output["total_energy"] = total_energy
+    #     total_energy = total_e0 + total_e_res
+    #     output["total_energy"] = total_energy
 
-        # Compute gradients
-        if compute_stress:
-            inputs = [data.pos, data.displacements]
-            compute_stress = True
-        else:
-            inputs = [data.pos]
+    #     # Compute gradients
+    #     if compute_stress:
+    #         inputs = [data.pos, data.displacements]
+    #         compute_stress = True
+    #     else:
+    #         inputs = [data.pos]
 
-        grad_outputs = torch.autograd.grad(
-            outputs=[total_energy],
-            inputs=inputs,
-            grad_outputs=[torch.ones_like(total_energy)],
-            retain_graph=self.training,
-            create_graph=self.training,
-        )
+    #     grad_outputs = torch.autograd.grad(
+    #         outputs=[total_energy],
+    #         inputs=inputs,
+    #         grad_outputs=[torch.ones_like(total_energy)],
+    #         retain_graph=self.training,
+    #         create_graph=self.training,
+    #     )
 
-        # Get forces and stresses
-        if compute_stress:
-            force, virial = grad_outputs
-            stress = virial / torch.det(data.box).abs().view(-1, 1, 1)
-            stress = torch.where(torch.abs(stress) < 1e10, stress, torch.zeros_like(stress))
-            output["force"] = -force
-            output["stress"] = -stress
-        else:
-            force = grad_outputs[0]
-            output["force"] = -force        
+    #     # Get forces and stresses
+    #     if compute_stress:
+    #         force, virial = grad_outputs
+    #         stress = virial / torch.det(data.box).abs().view(-1, 1, 1)
+    #         stress = torch.where(torch.abs(stress) < 1e10, stress, torch.zeros_like(stress))
+    #         output["force"] = -force
+    #         output["stress"] = -stress
+    #     else:
+    #         force = grad_outputs[0]
+    #         output["force"] = -force        
         
-        return output
+    #     return output

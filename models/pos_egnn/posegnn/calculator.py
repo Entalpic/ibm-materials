@@ -27,21 +27,21 @@ class PosEGNNCalculator(Calculator):
         self.device = device
         self.compute_stress = compute_stress
 
-    def calculate(self, atoms=None, properties=None, system_changes=all_changes):
-        Calculator.calculate(self, atoms)
-        self.results = {}
-        data = self._build_data(atoms)
-        out = self.model.compute_properties(data, compute_stress=self.compute_stress)
+    # def calculate(self, atoms=None, properties=None, system_changes=all_changes):
+    #     Calculator.calculate(self, atoms)
+    #     self.results = {}
+    #     data = self._build_data(atoms)
+    #     out = self.model.compute_properties(data, compute_stress=self.compute_stress)
 
-        # Decoder Forward
-        self.results = {
-            "energy": out["total_energy"].cpu().detach().numpy(),
-            "forces": out["force"].cpu().detach().numpy()
-        }
-        if self.compute_stress:
-            self.results.update({
-                "stress": -out["stress"].squeeze().cpu().detach().numpy()
-                })
+    #     # Decoder Forward
+    #     self.results = {
+    #         "energy": out["total_energy"].cpu().detach().numpy(),
+    #         "forces": out["force"].cpu().detach().numpy()
+    #     }
+    #     if self.compute_stress:
+    #         self.results.update({
+    #             "stress": -out["stress"].squeeze().cpu().detach().numpy()
+    #             })
 
     def _build_data(self, atoms):
         z = torch.tensor(np.array([atomic_numbers[symbol] for symbol in atoms.symbols]), device=self.device)
