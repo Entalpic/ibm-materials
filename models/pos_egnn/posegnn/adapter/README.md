@@ -5,6 +5,9 @@ This adapter injects LoRA into mergeable linear layers of **PosEGNN** and export
 ## Usage
 
 ```python
+from posegnn.model import PosEGNN
+from posegnn.adapter import PosEGNNLoRAModel, LoRAConfig
+
 # 1) build and load the backbone
 backbone = PosEGNN(checkpoint_dict["config"])
 backbone.load_state_dict(checkpoint_dict["state_dict"], strict=True)

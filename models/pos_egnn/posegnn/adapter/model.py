@@ -97,7 +97,7 @@ class PosEGNNLoRAModel(nn.Module):
         return sd_out
 
     @torch.no_grad()
-    def state_dict_backbone(self, merged: bool = False) -> OrderedDict:
+    def state_dict_backbone(self, merged: bool = True) -> OrderedDict:
         """
         Return backbone-only weights. If merged=True, adapters are fused and
         keys match the original PosEGNN layout.
