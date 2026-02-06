@@ -1,0 +1,32 @@
+[project]
+name = "ibm-materials"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = [
+    "aiohttp>=3.10.2",
+    "ase==3.24.0",
+    "datasets>=2.13.1",
+    "evaluate>=0.4.0",
+    "matplotlib==3.9.2",
+    "mordred==1.2.0",
+    "networkx>=2.8",
+    "numpy>=1.26.1,<2.0.0",
+    "pandas>=1.5.3",
+    "pyarrow>=14.0.1",
+    "rdkit>=2024.3.5",
+    "requests>=2.32.2",
+    "scikit-learn>=1.5.0",
+    "scipy>=1.12.0",
+    "selfies>=2.1.0",
+    "torch>=2.1.0",
+    "torch-geometric>=2.3.1",
+    "torch-nl==0.3",
+    "torch-optimizer>=0.3.0",
+    "torchinfo>=1.8.0",
+    "tqdm>=4.66.4",
+    "transformers>=4.38",
+    "umap-learn>=0.5.11",
+    "urllib3>=2.2.2",
+    "xgboost==1.6.2",
+    "zipp>=3.19.1",
+]
