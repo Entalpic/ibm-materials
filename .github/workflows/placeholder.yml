@@ -1,0 +1,8 @@
+
+name: Placeholder
+on: [push]
+jobs:
+  nothing:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "OK"
